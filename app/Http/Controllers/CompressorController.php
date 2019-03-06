@@ -10,7 +10,7 @@ class CompressorController extends Controller
 {
     public function compress(Request $request)
     {
-        $str = $request->input('string');        
+        $str = mb_strtolower($request->input('string'));        
         $arr = str_split($str);
         $count = count($arr);       
         $compress = '';
@@ -24,7 +24,7 @@ class CompressorController extends Controller
                 $length = strlen($item);
 
                 if($length>2){                    
-                    $compress .= $length.$arr[$i];
+                    $compress .= $arr[$i].$length;
                     $item = '';
                 } else {                    
                     $compress .= $item;
@@ -38,18 +38,19 @@ class CompressorController extends Controller
 
     public function decompress(Request $request)
     {       
-        $str = $request->input('string');        
+        $str = mb_strtolower($request->input('string'));        
         $arr = str_split($str);
         $count = count($arr);
+        $item = '';
         $decompress = '';        
         
         for($i=0; $i<$count; $i++){
             if(is_numeric($arr[$i])) {                
-                for($j=1; $j<=$arr[$i]; $j++){
-                    $decompress .= $arr[$i+1];
+                for($j=1; $j<$arr[$i]; $j++){
+                    $decompress .= $arr[$i-1];
                 }
-                $i += 1;                
-            } else {
+                                
+            } else {                
                 $decompress .= $arr[$i];
             }
         }

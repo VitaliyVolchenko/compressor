@@ -14,21 +14,47 @@ class CompressorController extends Controller
         $arr = str_split($str);
         $count = count($arr);       
         $compress = '';
+        $item = '';        
 
-        for($i=0; $i<$count; $i++){            
-            if($i+1 == $count){
-                $compress .= $arr[$i];
-            } else {                    
-                if($arr[$i] == $arr[$i+1] && isset($arr[$i+2]) && $arr[$i+1] == $arr[$i+2]){                    
-                    $compress .= "3$arr[$i]";
-                    $i= $i+2;                    
-                } else {                   
-                    $compress .= $arr[$i];
-                }                
-            }            
+        for($i=0; $i<$count; $i++){
+            if(isset($arr[$i+1]) && $arr[$i] == $arr[$i+1]){
+                $item .= $arr[$i];
+            } else {
+                $item .= $arr[$i];
+                $length = strlen($item);
+
+                if($length>2){                    
+                    $compress .= $length.$arr[$i];
+                    $item = '';
+                } else {                    
+                    $compress .= $item;
+                    $item = '';
+                }
+            }
         }
-        
+
         return response()->json($compress);
+    }
+
+    public function decompress(Request $request)
+    {       
+        $str = $request->input('string');        
+        $arr = str_split($str);
+        $count = count($arr);
+        $decompress = '';        
+        
+        for($i=0; $i<$count; $i++){
+            if(is_numeric($arr[$i])) {                
+                for($j=1; $j<=$arr[$i]; $j++){
+                    $decompress .= $arr[$i+1];
+                }
+                $i += 1;                
+            } else {
+                $decompress .= $arr[$i];
+            }
+        }
+
+        return response()->json($decompress);
 
     }
    

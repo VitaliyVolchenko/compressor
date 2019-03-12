@@ -10,7 +10,7 @@ class CompressorController extends Controller
 {
     public function compress(Request $request)
     {
-        $str = mb_strtolower($request->input('string'));        
+        $str = mb_strtolower($request->input('stringToCompress'));        
         $arr = str_split($str);
         $count = count($arr);       
         $compress = '';
@@ -38,7 +38,7 @@ class CompressorController extends Controller
 
     public function decompress(Request $request)
     {       
-        $str = mb_strtolower($request->input('string'));        
+        $str = mb_strtolower($request->input('stringToDecompress'));        
         $arr = str_split($str);
         $count = count($arr);
         $item = '';

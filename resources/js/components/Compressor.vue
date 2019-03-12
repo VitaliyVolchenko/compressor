@@ -49,7 +49,7 @@
                             <div style="justify-content: flex-start;
                             display: flex;" class="mt-3">
                                 <button type="submit" class="btn btn-primary mr-3">Submit</button>
-                                <button type="button" v-on:click="clear" class="btn btn-danger">Clear</button>
+                                <button type="button" v-on:click="clearDecompress" class="btn btn-danger">Clear</button>
                             </div>
                         </div>
                     </div>
@@ -71,10 +71,6 @@ export default {
           resCompress: '',
           resDecompress: ''                     
         }
-    },
-
-    watch(){
-
     },
 
     methods: {
@@ -105,24 +101,13 @@ export default {
         .catch((err) => {
             console.log(err);
           });
+      },
+      clearDecompress() {
+          console.log('CLEAR_DECOMPRESS');
+          this.stringToDecompress = '';
+          this.resDecompress = '';
       }
-        /* compress() {
-            fetch('api/compress', {
-                method: 'post',
-                body: JSON.stringify(this.stringToCompress),
-                headers: {
-                    'content-type': 'application/json'
-                }
-            })
-            .then(res => {
-                console.log('=====', res)
-                //res.json()
-            })
-            .then(data => {
-                console.log('-----===', data)
-            })
-            .catch(err => console.log(err));
-        } */
+        
     }
 }
 </script>

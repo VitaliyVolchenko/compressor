@@ -8,7 +8,7 @@
                   <p v-if="errors.length">
                     <b>Пожалуйста исправьте указанные ошибки:</b>
                     <ul>
-                      <li v-for="error in errors">{{ error }}</li>
+                      <li v-for="(error, index) in errors" :key="index">{{ error }}</li>
                     </ul>
                   </p>
                 </div>
@@ -44,7 +44,7 @@
                     <p v-if="errorsDec.length">
                       <b>Пожалуйста исправьте указанные ошибки:</b>
                       <ul>
-                        <li v-for="error in errorsDec">{{ error }}</li>
+                        <li v-for="(error, index) in errorsDec" :key="index">{{ error }}</li>
                       </ul>
                     </p>
                   </div>
@@ -77,7 +77,6 @@
 
 <script>
 import axios from 'axios';
-//@click="compress"
 
 export default {
     data() {
@@ -94,24 +93,25 @@ export default {
     methods: {
 
       validStringToCompress(string) {
-        var re = "/[a-f]\S^\d]+*/";
+        var re = new RegExp('^[a-f]+$');        
         return re.test(string);
       },
 
       validStringToDecompress(string) {
-        var re = "/[a-f]\S]+*/";
+        var re = new RegExp('^([a-f])+([a-f0-9])+$');
         return re.test(string);
       },
         
       compress() {
 
         this.errors = [];
+        console.log('validation ===', this.validStringToCompress(this.stringToCompress))
 
         if (!this.stringToCompress){
           this.errors.push('string required.');          
-        }
+        }        
 
-        if(!this.validStringToCompress(this.stringToCompress)){
+        if(!this.validStringToCompress(this.stringToCompress) && this.stringToCompress.length != 0){
           this.errors.push('Valid string required.');
         }
 
@@ -130,22 +130,28 @@ export default {
         }
       },
       clear() {
+        
           console.log('CLEAR');
           this.stringToCompress = '';
           this.resCompress = '';
+          this.errors = [];
       },
+
       decompress() {
         this.errorsDec = [];
+
+        console.log('validationDecomprtess ===', this.validStringToDecompress(this.stringToDecompress))
 
         if (!this.stringToDecompress){
           this.errorsDec.push('string required.');          
         }
 
-        if(!this.validStringToDecompress(this.stringToDecompress)){
+        if(!this.validStringToDecompress(this.stringToDecompress) && this.stringToDecompress.length != 0){
           this.errorsDec.push('Valid string required.');
         }
 
         if(this.errorsDec.length<1) {
+
           console.log('DECOMPRESS', this.stringToDecompress);        
           axios.post('api/decompress', {stringToDecompress: this.stringToDecompress})
           .then(res => {
@@ -157,10 +163,12 @@ export default {
             });
         }
       },
+
       clearDecompress() {
           console.log('CLEAR_DECOMPRESS');
           this.stringToDecompress = '';
           this.resDecompress = '';
+          this.errorsDec = [];
       }
         
     }
